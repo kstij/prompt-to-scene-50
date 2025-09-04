@@ -2,41 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* AI Video Generator Design System - Premium tech aesthetic with cosmic gradients */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
+    /* Core AI theme colors - deep space and electric */
+    --background: 224 15% 6%;
+    --foreground: 210 40% 98%;
+    --surface: 224 12% 8%;
+    
+    /* Cards and surfaces */
+    --card: 224 12% 8%;
+    --card-foreground: 210 40% 98%;
+    --card-glow: 263 70% 50%;
+    
+    /* Interactive elements */
+    --primary: 263 70% 50%; /* Electric purple */
     --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
+    --primary-glow: 263 70% 60%;
+    
+    --secondary: 217 15% 12%;
+    --secondary-foreground: 210 40% 85%;
+    
+    --accent: 200 80% 60%; /* Electric blue */
+    --accent-foreground: 210 40% 98%;
+    --accent-glow: 200 80% 70%;
+    
+    /* UI States */
+    --muted: 217 15% 10%;
+    --muted-foreground: 215 20% 65%;
+    
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 20 14% 4%;
+    
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    
+    /* Borders and inputs */
+    --border: 217 15% 15%;
+    --input: 217 15% 12%;
+    --input-focus: 263 70% 50%;
+    --ring: 263 70% 50%;
+    
+    /* Chat specific colors */
+    --chat-user: 263 70% 50%;
+    --chat-user-foreground: 210 40% 98%;
+    --chat-ai: 217 15% 12%;
+    --chat-ai-foreground: 210 40% 85%;
+    
+    /* Video player theme */
+    --video-bg: 224 20% 4%;
+    --video-controls: 217 15% 10%;
+    --video-accent: 263 70% 50%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(263 70% 50%) 0%, hsl(200 80% 60%) 100%);
+    --gradient-surface: linear-gradient(135deg, hsl(224 12% 8%) 0%, hsl(217 15% 12%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(263 70% 20%) 0%, hsl(200 80% 20%) 50%, hsl(263 70% 20%) 100%);
+    --gradient-glow: radial-gradient(circle, hsl(263 70% 50% / 0.3) 0%, transparent 70%);
+    
+    /* Shadows and glows */
+    --shadow-elegant: 0 4px 20px hsl(224 15% 4% / 0.4);
+    --shadow-video: 0 8px 32px hsl(263 70% 50% / 0.2);
+    --glow-primary: 0 0 30px hsl(263 70% 50% / 0.4);
+    --glow-accent: 0 0 20px hsl(200 80% 60% / 0.3);
+    
+    /* Animation variables */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +139,89 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Component-specific utilities */
+  .chat-bubble-user {
+    @apply bg-primary text-primary-foreground;
+    background: var(--gradient-primary);
+    box-shadow: var(--glow-primary);
+  }
+
+  .chat-bubble-ai {
+    @apply bg-secondary text-secondary-foreground border border-border/50;
+    background: var(--gradient-surface);
+  }
+
+  .video-preview {
+    @apply relative rounded-lg overflow-hidden;
+    background: hsl(var(--video-bg));
+    box-shadow: var(--shadow-video);
+  }
+
+  .glass-surface {
+    @apply backdrop-blur-xl border border-white/10;
+    background: hsl(var(--surface) / 0.8);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 20px currentColor;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 20px hsl(var(--primary) / 0.4); }
+    to { box-shadow: 0 0 30px hsl(var(--primary) / 0.8), 0 0 40px hsl(var(--accent) / 0.4); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Scrollbar styling */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary)) hsl(var(--background));
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-glow;
+  }
+
+  /* Loading shimmer effect */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--surface)) 0%,
+      hsl(var(--border)) 50%,
+      hsl(var(--surface)) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
   }
 }
