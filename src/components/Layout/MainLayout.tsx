@@ -4,13 +4,25 @@ import { VideoSidebar } from "./VideoSidebar";
 import { ChatInterface } from "../Chat/ChatInterface";
 import { Button } from "@/components/ui/button";
 import { PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
+import heroBg from "@/assets/hero-bg.jpg";
 
 export function MainLayout() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen w-full flex bg-background">
+      <div 
+        className="min-h-screen w-full flex bg-background relative"
+        style={{
+          backgroundImage: `url(${heroBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-background/90 backdrop-blur-sm" />
+
         {/* Header */}
         <header className="fixed top-0 left-0 right-0 z-50 h-16 glass-surface border-b border-border/50">
           <div className="flex items-center justify-between h-full px-6">
@@ -18,14 +30,14 @@ export function MainLayout() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                onClick={() => setSidebarVisible(!sidebarVisible)}
                 className="text-foreground hover:bg-secondary"
               >
-                {sidebarCollapsed ? <PanelLeftOpen /> : <PanelLeftClose />}
+                {sidebarVisible ? <PanelLeftClose /> : <PanelLeftOpen />}
               </Button>
               
               <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center">
+                <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center animate-glow">
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
                 <h1 className="text-xl font-bold glow-text">AI Video Studio</h1>
@@ -33,16 +45,16 @@ export function MainLayout() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="text-sm text-muted-foreground">
-                Next-gen AI video creation
+              <div className="text-sm text-muted-foreground animate-float">
+                Next-gen AI video creation ✨
               </div>
             </div>
           </div>
         </header>
 
         {/* Main Content */}
-        <div className="flex w-full pt-16">
-          {!sidebarCollapsed && (
+        <div className="flex w-full pt-16 relative z-10">
+          {sidebarVisible && (
             <VideoSidebar />
           )}
           
