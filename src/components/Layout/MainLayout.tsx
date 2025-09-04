@@ -11,27 +11,27 @@ export function MainLayout() {
 
   return (
     <SidebarProvider>
-      <div 
-        className="min-h-screen w-full flex bg-background relative"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      >
-        {/* Overlay for readability */}
-        <div className="absolute inset-0 bg-background/90 backdrop-blur-sm" />
+        <div 
+          className="min-h-screen w-full flex bg-background relative"
+          style={{
+            backgroundImage: `url(${heroBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
+        >
+          {/* Light overlay for readability */}
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
 
         {/* Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 h-16 glass-surface border-b border-border/50">
+        <header className="fixed top-0 left-0 right-0 z-50 h-16 glass-surface border-b border-border">
           <div className="flex items-center justify-between h-full px-6">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setSidebarVisible(!sidebarVisible)}
-                className="text-foreground hover:bg-secondary"
+                className="text-foreground hover:bg-muted"
               >
                 {sidebarVisible ? <PanelLeftClose /> : <PanelLeftOpen />}
               </Button>
@@ -40,7 +40,7 @@ export function MainLayout() {
                 <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center animate-glow">
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
-                <h1 className="text-xl font-bold glow-text">AI Video Studio</h1>
+                <h1 className="text-xl font-bold text-foreground">AI Video Studio</h1>
               </div>
             </div>
 

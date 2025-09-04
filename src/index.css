@@ -6,72 +6,72 @@
 
 @layer base {
   :root {
-    /* Core AI theme colors - deep space and electric */
-    --background: 224 15% 6%;
-    --foreground: 210 40% 98%;
-    --surface: 224 12% 8%;
+    /* Weam.ai inspired light theme - clean and minimal */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --surface: 0 0% 98%;
     
     /* Cards and surfaces */
-    --card: 224 12% 8%;
-    --card-foreground: 210 40% 98%;
-    --card-glow: 263 70% 50%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --card-glow: 262 83% 58%;
     
-    /* Interactive elements */
-    --primary: 263 70% 50%; /* Electric purple */
-    --primary-foreground: 210 40% 98%;
-    --primary-glow: 263 70% 60%;
+    /* Interactive elements - Weam purple accent */
+    --primary: 262 83% 58%; /* Weam purple */  
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 262 83% 68%;
     
-    --secondary: 217 15% 12%;
-    --secondary-foreground: 210 40% 85%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
     
-    --accent: 200 80% 60%; /* Electric blue */
-    --accent-foreground: 210 40% 98%;
-    --accent-glow: 200 80% 70%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --accent-glow: 262 83% 68%;
     
     /* UI States */
-    --muted: 217 15% 10%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
     
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
     
     --warning: 38 92% 50%;
-    --warning-foreground: 20 14% 4%;
+    --warning-foreground: 240 10% 3.9%;
     
     --success: 142 76% 36%;
-    --success-foreground: 210 40% 98%;
+    --success-foreground: 0 0% 98%;
     
     /* Borders and inputs */
-    --border: 217 15% 15%;
-    --input: 217 15% 12%;
-    --input-focus: 263 70% 50%;
-    --ring: 263 70% 50%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --input-focus: 262 83% 58%;
+    --ring: 262 83% 58%;
     
-    /* Chat specific colors */
-    --chat-user: 263 70% 50%;
-    --chat-user-foreground: 210 40% 98%;
-    --chat-ai: 217 15% 12%;
-    --chat-ai-foreground: 210 40% 85%;
+    /* Chat specific colors - updated for light theme */
+    --chat-user: 262 83% 58%;
+    --chat-user-foreground: 0 0% 98%;
+    --chat-ai: 0 0% 98%;
+    --chat-ai-foreground: 240 10% 3.9%;
     
-    /* Video player theme */
-    --video-bg: 224 20% 4%;
-    --video-controls: 217 15% 10%;
-    --video-accent: 263 70% 50%;
+    /* Video player theme - subtle on light */
+    --video-bg: 240 4.8% 95.9%;
+    --video-controls: 0 0% 100%;
+    --video-accent: 262 83% 58%;
     
-  /* Gradients */
-  --gradient-primary: linear-gradient(135deg, hsl(263 70% 50%) 0%, hsl(200 80% 60%) 100%);
-  --gradient-surface: linear-gradient(135deg, hsl(224 12% 8%) 0%, hsl(217 15% 12%) 100%);
-  --gradient-hero: linear-gradient(135deg, hsl(263 70% 20%) 0%, hsl(200 80% 20%) 50%, hsl(263 70% 20%) 100%);
-  --gradient-glow: radial-gradient(circle, hsl(263 70% 50% / 0.3) 0%, transparent 70%);
-  --gradient-editor: linear-gradient(135deg, hsl(224 15% 6%) 0%, hsl(217 20% 8%) 50%, hsl(224 15% 6%) 100%);
-  --gradient-panel: linear-gradient(180deg, hsl(224 12% 8%) 0%, hsl(217 15% 10%) 100%);
-  --gradient-timeline: linear-gradient(90deg, hsl(224 15% 4%) 0%, hsl(217 20% 6%) 50%, hsl(224 15% 4%) 100%);
+    /* Light theme gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(250 84% 60%) 100%);
+    --gradient-surface: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(240 4.8% 95.9%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(262 83% 95%) 0%, hsl(250 84% 95%) 50%, hsl(262 83% 95%) 100%);
+    --gradient-glow: radial-gradient(circle, hsl(262 83% 58% / 0.1) 0%, transparent 70%);
+    --gradient-editor: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(240 4.8% 95.9%) 50%, hsl(0 0% 100%) 100%);
+    --gradient-panel: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(240 4.8% 95.9%) 100%);
+    --gradient-timeline: linear-gradient(90deg, hsl(240 4.8% 95.9%) 0%, hsl(0 0% 100%) 50%, hsl(240 4.8% 95.9%) 100%);
     
-    /* Shadows and glows */
-    --shadow-elegant: 0 4px 20px hsl(224 15% 4% / 0.4);
-    --shadow-video: 0 8px 32px hsl(263 70% 50% / 0.2);
-    --glow-primary: 0 0 30px hsl(263 70% 50% / 0.4);
-    --glow-accent: 0 0 20px hsl(200 80% 60% / 0.3);
+    /* Shadows and glows - subtle for light theme */
+    --shadow-elegant: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-video: 0 4px 6px -1px hsl(262 83% 58% / 0.1);
+    --glow-primary: 0 0 20px hsl(262 83% 58% / 0.2);
+    --glow-accent: 0 0 15px hsl(262 83% 58% / 0.15);
     
     /* Animation variables */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -79,59 +79,62 @@
     
     --radius: 0.75rem;
 
+    /* Sidebar colors for light theme */
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
+    --sidebar-primary: 262 83% 58%;
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 262 83% 58%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
+    /* Keep dark mode as fallback but optimized */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --surface: 240 3.7% 15.9%;
+    
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --card-glow: 262 83% 58%;
+    
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 262 83% 68%;
+    
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --accent-glow: 262 83% 68%;
+    
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 262 83% 58%;
+    
+    /* Dark theme chat colors */
+    --chat-user: 262 83% 58%;
+    --chat-user-foreground: 0 0% 98%;
+    --chat-ai: 240 3.7% 15.9%;
+    --chat-ai-foreground: 0 0% 98%;
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary: 262 83% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 262 83% 58%;
   }
 }
 
@@ -152,7 +155,7 @@
   }
 
   .chat-bubble-ai {
-    @apply bg-secondary text-secondary-foreground border border-border/50;
+    @apply bg-card text-card-foreground border border-border;
     background: var(--gradient-surface);
   }
 
@@ -163,23 +166,28 @@
   }
 
   .glass-surface {
-    @apply backdrop-blur-xl border border-white/10;
-    background: hsl(var(--surface) / 0.8);
+    @apply backdrop-blur-xl border border-border;
+    background: hsl(var(--card) / 0.95);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 20px hsl(var(--primary));
   }
 
   /* Professional video editor utilities */
   .editor-panel {
-    @apply bg-surface border-r border-border/50;
+    @apply bg-card border-r border-border;
     background: var(--gradient-panel);
+    box-shadow: var(--shadow-elegant);
   }
 
   .timeline-track {
-    @apply relative;
+    @apply relative bg-card;
     background: var(--gradient-timeline);
   }
 
   .video-editor-surface {
-    @apply backdrop-blur-xl border border-white/10;
+    @apply backdrop-blur-xl border border-border;
     background: var(--gradient-editor);
   }
 
@@ -197,8 +205,8 @@
   }
 
   @keyframes glow {
-    from { box-shadow: 0 0 20px hsl(var(--primary) / 0.4); }
-    to { box-shadow: 0 0 30px hsl(var(--primary) / 0.8), 0 0 40px hsl(var(--accent) / 0.4); }
+    from { box-shadow: 0 0 10px hsl(var(--primary) / 0.2); }
+    to { box-shadow: 0 0 20px hsl(var(--primary) / 0.4), 0 0 30px hsl(var(--accent-glow) / 0.2); }
   }
 
   @keyframes float {
@@ -221,7 +229,7 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-background;
+    @apply bg-muted;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -236,9 +244,9 @@
   .shimmer {
     background: linear-gradient(
       90deg,
-      hsl(var(--surface)) 0%,
+      hsl(var(--muted)) 0%,
       hsl(var(--border)) 50%,
-      hsl(var(--surface)) 100%
+      hsl(var(--muted)) 100%
     );
     background-size: 200% 100%;
     animation: shimmer 1.5s ease-in-out infinite;
