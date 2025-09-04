@@ -143,12 +143,15 @@ export default {
 				'slide-up': 'slide-up 0.4s ease-out',
 				'pulse-glow': 'pulse-glow 2s ease-in-out infinite'
 			},
-			backgroundImage: {
-				'gradient-primary': 'var(--gradient-primary)',
-				'gradient-surface': 'var(--gradient-surface)',
-				'gradient-hero': 'var(--gradient-hero)',
-				'gradient-glow': 'var(--gradient-glow)'
-			},
+  backgroundImage: {
+    'gradient-primary': 'var(--gradient-primary)',
+    'gradient-surface': 'var(--gradient-surface)',
+    'gradient-hero': 'var(--gradient-hero)',
+    'gradient-glow': 'var(--gradient-glow)',
+    'gradient-editor': 'var(--gradient-editor)',
+    'gradient-panel': 'var(--gradient-panel)',
+    'gradient-timeline': 'var(--gradient-timeline)'
+  },
 			boxShadow: {
 				'elegant': 'var(--shadow-elegant)',
 				'video': 'var(--shadow-video)',

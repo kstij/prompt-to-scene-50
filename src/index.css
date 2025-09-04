@@ -58,11 +58,14 @@
     --video-controls: 217 15% 10%;
     --video-accent: 263 70% 50%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(263 70% 50%) 0%, hsl(200 80% 60%) 100%);
-    --gradient-surface: linear-gradient(135deg, hsl(224 12% 8%) 0%, hsl(217 15% 12%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsl(263 70% 20%) 0%, hsl(200 80% 20%) 50%, hsl(263 70% 20%) 100%);
-    --gradient-glow: radial-gradient(circle, hsl(263 70% 50% / 0.3) 0%, transparent 70%);
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, hsl(263 70% 50%) 0%, hsl(200 80% 60%) 100%);
+  --gradient-surface: linear-gradient(135deg, hsl(224 12% 8%) 0%, hsl(217 15% 12%) 100%);
+  --gradient-hero: linear-gradient(135deg, hsl(263 70% 20%) 0%, hsl(200 80% 20%) 50%, hsl(263 70% 20%) 100%);
+  --gradient-glow: radial-gradient(circle, hsl(263 70% 50% / 0.3) 0%, transparent 70%);
+  --gradient-editor: linear-gradient(135deg, hsl(224 15% 6%) 0%, hsl(217 20% 8%) 50%, hsl(224 15% 6%) 100%);
+  --gradient-panel: linear-gradient(180deg, hsl(224 12% 8%) 0%, hsl(217 15% 10%) 100%);
+  --gradient-timeline: linear-gradient(90deg, hsl(224 15% 4%) 0%, hsl(217 20% 6%) 50%, hsl(224 15% 4%) 100%);
     
     /* Shadows and glows */
     --shadow-elegant: 0 4px 20px hsl(224 15% 4% / 0.4);
@@ -164,8 +167,29 @@
     background: hsl(var(--surface) / 0.8);
   }
 
-  .glow-text {
-    text-shadow: 0 0 20px currentColor;
+  /* Professional video editor utilities */
+  .editor-panel {
+    @apply bg-surface border-r border-border/50;
+    background: var(--gradient-panel);
+  }
+
+  .timeline-track {
+    @apply relative;
+    background: var(--gradient-timeline);
+  }
+
+  .video-editor-surface {
+    @apply backdrop-blur-xl border border-white/10;
+    background: var(--gradient-editor);
+  }
+
+  .professional-button {
+    @apply transition-all duration-200 hover:scale-105 active:scale-95;
+    box-shadow: var(--shadow-elegant);
+  }
+
+  .professional-button:hover {
+    box-shadow: var(--glow-primary);
   }
 
   .animate-glow {

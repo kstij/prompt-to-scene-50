@@ -6,17 +6,38 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   X, 
-  Scissors, 
-  Crop, 
-  Type, 
-  Music, 
-  Palette, 
   Save,
-  Upload
+  Play,
+  Pause,
+  Volume2,
+  Maximize,
+  ZoomIn,
+  ZoomOut,
+  Undo,
+  Redo,
+  Layers,
+  Settings,
+  Download,
+  Copy,
+  Trash2,
+  Eye,
+  EyeOff,
+  Lock,
+  Unlock,
+  Plus,
+  RotateCcw,
+  Move3D,
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Timeline } from "./editor/Timeline";
+import { PreviewPanel } from "./editor/PreviewPanel";
+import { PropertiesPanel } from "./editor/PropertiesPanel";
+import { ToolsPanel } from "./editor/ToolsPanel";
 import type { VideoEditData } from "./ChatInterface";
 
 interface EditPanelProps {
@@ -41,7 +62,10 @@ const TEXT_POSITIONS = [
 ];
 
 export function EditPanel({ videoId, editData, onSave, onCancel, onDataChange }: EditPanelProps) {
-  const [activeTab, setActiveTab] = useState("trim");
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedLayer, setSelectedLayer] = useState<string | null>(null);
+  const [zoom, setZoom] = useState(100);
   
   const updateEditData = (updates: Partial<VideoEditData>) => {
     const newData = { ...editData, ...updates };
@@ -49,227 +73,127 @@ export function EditPanel({ videoId, editData, onSave, onCancel, onDataChange }:
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end">
-      <div className="w-full bg-surface border-t border-border rounded-t-2xl animate-slide-up">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border/50">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Scissors className="h-4 w-4 text-white" />
+    <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-xl">
+      {/* Professional Video Editor Interface */}
+      <div className="h-full flex flex-col">
+        {/* Top Toolbar */}
+        <div className="h-16 bg-surface border-b border-border/50 flex items-center justify-between px-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center animate-glow">
+                <Sparkles className="h-4 w-4 text-white" />
+              </div>
+              <h2 className="text-lg font-semibold glow-text">AI Video Editor</h2>
             </div>
-            <h2 className="text-lg font-semibold">Edit Video</h2>
+            
+            <Separator orientation="vertical" className="h-6" />
+            
+            {/* Undo/Redo */}
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Undo className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Redo className="h-4 w-4" />
+              </Button>
+            </div>
+            
+            <Separator orientation="vertical" className="h-6" />
+            
+            {/* Zoom Controls */}
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setZoom(Math.max(50, zoom - 25))}>
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <span className="text-sm text-muted-foreground min-w-[50px] text-center">{zoom}%</span>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setZoom(Math.min(200, zoom + 25))}>
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <Button onClick={() => onSave(editData)} className="bg-gradient-primary">
-              <Save className="h-4 w-4 mr-2" />
-              Save Changes
+            <Button variant="outline" size="sm" className="professional-button">
+              <Download className="h-4 w-4 mr-2" />
+              Export
             </Button>
-            <Button variant="ghost" onClick={onCancel}>
+            <Button onClick={() => onSave(editData)} className="bg-gradient-primary professional-button">
+              <Save className="h-4 w-4 mr-2" />
+              Save
+            </Button>
+            <Button variant="ghost" onClick={onCancel} className="h-8 w-8 p-0">
               <X className="h-4 w-4" />
             </Button>
           </div>
         </div>
-
-        {/* Edit Tools */}
-        <div className="p-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-5 mb-6">
-              <TabsTrigger value="trim" className="flex items-center gap-2">
-                <Scissors className="h-4 w-4" />
-                Trim
-              </TabsTrigger>
-              <TabsTrigger value="crop" className="flex items-center gap-2">
-                <Crop className="h-4 w-4" />
-                Crop
-              </TabsTrigger>
-              <TabsTrigger value="text" className="flex items-center gap-2">
-                <Type className="h-4 w-4" />
-                Text
-              </TabsTrigger>
-              <TabsTrigger value="music" className="flex items-center gap-2">
-                <Music className="h-4 w-4" />
-                Music
-              </TabsTrigger>
-              <TabsTrigger value="filters" className="flex items-center gap-2">
-                <Palette className="h-4 w-4" />
-                Filters
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Trim Tab */}
-            <TabsContent value="trim" className="space-y-6">
-              <Card className="p-4 bg-card border-border/50">
-                <h3 className="font-medium mb-4">Trim Timeline</h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-sm text-muted-foreground">Start Time (seconds)</Label>
-                    <Slider
-                      value={[editData.trim?.start || 0]}
-                      max={30}
-                      step={0.1}
-                      onValueChange={(value) => updateEditData({ 
-                        trim: { ...editData.trim, start: value[0], end: editData.trim?.end || 15 }
-                      })}
-                      className="mt-2"
-                    />
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {(editData.trim?.start || 0).toFixed(1)}s
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="text-sm text-muted-foreground">End Time (seconds)</Label>
-                    <Slider
-                      value={[editData.trim?.end || 15]}
-                      max={30}
-                      step={0.1}
-                      onValueChange={(value) => updateEditData({ 
-                        trim: { start: editData.trim?.start || 0, end: value[0] }
-                      })}
-                      className="mt-2"
-                    />
-                    <div className="text-xs text-muted-foreground mt-1">
-                      {(editData.trim?.end || 15).toFixed(1)}s
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </TabsContent>
-
-            {/* Crop Tab */}
-            <TabsContent value="crop" className="space-y-6">
-              <Card className="p-4 bg-card border-border/50">
-                <h3 className="font-medium mb-4">Aspect Ratio</h3>
-                
-                <div className="grid grid-cols-2 gap-3">
-                  {CROP_PRESETS.map((preset) => (
-                    <Button
-                      key={preset.id}
-                      variant={editData.crop === preset.value ? "default" : "outline"}
-                      onClick={() => updateEditData({ crop: preset.value })}
-                      className="h-12 justify-start"
-                    >
-                      <div>
-                        <div className="font-medium">{preset.name}</div>
-                        <div className="text-xs opacity-70">{preset.value}</div>
-                      </div>
-                    </Button>
-                  ))}
-                </div>
-              </Card>
-            </TabsContent>
-
-            {/* Text Tab */}
-            <TabsContent value="text" className="space-y-6">
-              <Card className="p-4 bg-card border-border/50">
-                <h3 className="font-medium mb-4">Text Overlay</h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="text-content">Text Content</Label>
-                    <Input
-                      id="text-content"
-                      placeholder="Enter your text..."
-                      value={editData.text?.content || ""}
-                      onChange={(e) => updateEditData({ 
-                        text: { ...editData.text, content: e.target.value, position: editData.text?.position || "bottom" }
-                      })}
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div>
-                    <Label>Position</Label>
-                    <Select 
-                      value={editData.text?.position || "bottom"} 
-                      onValueChange={(value) => updateEditData({ 
-                        text: { content: editData.text?.content || "", position: value }
-                      })}
-                    >
-                      <SelectTrigger className="mt-2">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {TEXT_POSITIONS.map((pos) => (
-                          <SelectItem key={pos.id} value={pos.id}>
-                            {pos.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </Card>
-            </TabsContent>
-
-            {/* Music Tab */}
-            <TabsContent value="music" className="space-y-6">
-              <Card className="p-4 bg-card border-border/50">
-                <h3 className="font-medium mb-4">Background Music</h3>
-                
-                <div className="space-y-4">
-                  <Button variant="outline" className="w-full h-12 justify-center">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Audio File
-                  </Button>
-
-                  <div className="text-center text-sm text-muted-foreground">
-                    Or choose from stock music:
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-2">
-                    {["Ambient Chill", "Cinematic Epic", "Corporate", "Upbeat Pop"].map((track) => (
-                      <Button
-                        key={track}
-                        variant={editData.music === track ? "default" : "outline"}
-                        onClick={() => updateEditData({ music: track })}
-                        className="justify-start"
-                      >
-                        <Music className="h-4 w-4 mr-2" />
-                        {track}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </Card>
-            </TabsContent>
-
-            {/* Filters Tab */}
-            <TabsContent value="filters" className="space-y-6">
-              <Card className="p-4 bg-card border-border/50">
-                <h3 className="font-medium mb-4">Video Filters</h3>
-                
-                <div className="space-y-6">
-                  {[
-                    { key: "brightness", label: "Brightness", min: -100, max: 100, default: 0 },
-                    { key: "contrast", label: "Contrast", min: -100, max: 100, default: 0 },
-                    { key: "saturation", label: "Saturation", min: -100, max: 100, default: 0 },
-                    { key: "sharpness", label: "Sharpness", min: 0, max: 100, default: 50 }
-                  ].map((filter) => (
-                    <div key={filter.key}>
-                      <div className="flex items-center justify-between mb-2">
-                        <Label className="text-sm">{filter.label}</Label>
-                        <span className="text-xs text-muted-foreground">
-                          {editData.filters?.[filter.key] || filter.default}
-                        </span>
-                      </div>
-                      <Slider
-                        value={[editData.filters?.[filter.key] || filter.default]}
-                        min={filter.min}
-                        max={filter.max}
-                        step={1}
-                        onValueChange={(value) => updateEditData({ 
-                          filters: { ...editData.filters, [filter.key]: value[0] }
-                        })}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            </TabsContent>
-          </Tabs>
+        
+        {/* Main Editor Layout */}
+        <div className="flex-1 flex">
+          {/* Left Sidebar - Tools */}
+          <div className="w-80 editor-panel">
+            <ToolsPanel editData={editData} onDataChange={updateEditData} />
+          </div>
+          
+          {/* Center - Preview & Timeline */}
+          <div className="flex-1 flex flex-col bg-gradient-editor">
+            {/* Preview Area */}
+            <div className="flex-1 video-editor-surface">
+              <PreviewPanel 
+                videoId={videoId}
+                currentTime={currentTime}
+                isPlaying={isPlaying}
+                onTimeChange={setCurrentTime}
+                onPlayPause={() => setIsPlaying(!isPlaying)}
+                editData={editData}
+              />
+            </div>
+            
+            {/* Timeline Area */}
+            <div className="h-64 timeline-track border-t border-border/50">
+              <Timeline 
+                editData={editData}
+                currentTime={currentTime}
+                onCurrentTimeChange={setCurrentTime}
+                onDataChange={updateEditData}
+                selectedLayer={selectedLayer}
+                onLayerSelect={setSelectedLayer}
+                zoom={zoom}
+              />
+            </div>
+          </div>
+          
+          {/* Right Sidebar - Properties */}
+          <div className="w-80 editor-panel">
+            <PropertiesPanel 
+              editData={editData}
+              selectedLayer={selectedLayer}
+              onDataChange={updateEditData}
+            />
+          </div>
+        </div>
+        
+        {/* Bottom Playback Controls */}
+        <div className="h-16 bg-surface border-t border-border/50 flex items-center justify-center gap-4">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="h-10 w-10 p-0 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+          </Button>
+          
+          <div className="text-sm text-muted-foreground font-mono">
+            {Math.floor(currentTime / 60)}:{(currentTime % 60).toFixed(1).padStart(4, '0')} / 0:30.0
+          </div>
+          
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Volume2 className="h-4 w-4" />
+          </Button>
+          
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Maximize className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>
