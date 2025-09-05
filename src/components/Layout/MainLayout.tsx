@@ -12,6 +12,7 @@ export function MainLayout() {
   return (
     <SidebarProvider>
         <div 
+          data-bg="none"
           className="min-h-screen w-full flex bg-background relative"
         >
 
