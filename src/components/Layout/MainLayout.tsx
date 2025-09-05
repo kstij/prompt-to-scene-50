@@ -4,7 +4,6 @@ import { VideoSidebar } from "./VideoSidebar";
 import { ChatInterface } from "../Chat/ChatInterface";
 import { Button } from "@/components/ui/button";
 import { PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
 
 export function MainLayout() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -14,15 +13,7 @@ export function MainLayout() {
     <SidebarProvider>
         <div 
           className="min-h-screen w-full flex bg-background relative"
-          style={{
-            backgroundImage: `url(${heroBg})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed'
-          }}
         >
-          {/* Light overlay for readability */}
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
 
         {/* Header */}
         <header className="fixed top-0 left-0 right-0 z-50 h-16 glass-surface border-b border-border">
