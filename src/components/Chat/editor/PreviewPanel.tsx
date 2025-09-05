@@ -16,7 +16,7 @@ import {
   Crosshair
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DraggableCanvas } from "./DraggableCanvas";
+
 import type { VideoEditData } from "../ChatInterface";
 
 interface PreviewPanelProps {
@@ -141,22 +141,8 @@ export function PreviewPanel({
               </div>
             </div>
             
-            {/* Draggable Canvas Overlay */}
-            {onEditDataChange && onElementSelect && (
-              <div className="absolute inset-0">
-                <DraggableCanvas
-                  editData={editData}
-                  onDataChange={onEditDataChange}
-                  onElementSelect={onElementSelect}
-                  selectedElement={selectedElement || null}
-                  width={400 * (previewZoom / 100)}
-                  height={225 * (previewZoom / 100)}
-                />
-              </div>
-            )}
-            
-            {/* Text overlay preview - only show if not using draggable canvas */}
-            {(!onEditDataChange || !onElementSelect) && editData.text?.content && (
+            {/* Text overlay preview */}
+            {editData.text?.content && (
               <div 
                 className={cn(
                   "absolute left-4 right-4 text-white text-center font-bold text-lg drop-shadow-lg",
