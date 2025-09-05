@@ -236,13 +236,37 @@ export function ToolsPanel({ editData, onDataChange }: ToolsPanelProps) {
               <div>
                 <Label className="text-sm font-medium mb-2 block">Shapes</Label>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => {
+                      // Trigger shape addition - this will be handled by the DraggableCanvas
+                      console.log('Add circle shape');
+                    }}
+                  >
                     <Circle className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => {
+                      // Trigger shape addition - this will be handled by the DraggableCanvas  
+                      console.log('Add rectangle shape');
+                    }}
+                  >
                     <Square className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => {
+                      // Trigger shape addition - this will be handled by the DraggableCanvas
+                      console.log('Add triangle shape');
+                    }}
+                  >
                     <Triangle className="h-4 w-4" />
                   </Button>
                 </div>
@@ -326,6 +350,39 @@ export function ToolsPanel({ editData, onDataChange }: ToolsPanelProps) {
                       variant="outline"
                       size="sm"
                       className="h-auto p-2 flex flex-col items-center gap-1"
+                      onClick={() => {
+                        // Apply filter based on preset
+                        const filterValues: Record<string, number> = {};
+                        
+                        switch (filter.name) {
+                          case 'Vintage':
+                            filterValues.saturation = -20;
+                            filterValues.contrast = 10;
+                            filterValues.brightness = -10;
+                            break;
+                          case 'Black & White':
+                            filterValues.saturation = -100;
+                            break;
+                          case 'Warm':
+                            filterValues.brightness = 15;
+                            filterValues.contrast = 5;
+                            break;
+                          case 'Cool':
+                            filterValues.brightness = -10;
+                            filterValues.saturation = 20;
+                            break;
+                          case 'Dramatic':
+                            filterValues.contrast = 30;
+                            filterValues.saturation = 10;
+                            filterValues.brightness = -5;
+                            break;
+                          default:
+                            // Reset to none
+                            break;
+                        }
+                        
+                        updateEditData({ filters: filterValues });
+                      }}
                     >
                       <span className="text-lg">{filter.preview}</span>
                       <span className="text-xs">{filter.name}</span>
@@ -339,15 +396,59 @@ export function ToolsPanel({ editData, onDataChange }: ToolsPanelProps) {
               <div>
                 <Label className="text-sm font-medium mb-2 block">Quick Adjustments</Label>
                 <div className="space-y-2">
-                  <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full justify-start"
+                    onClick={() => {
+                      // Auto color correct
+                      updateEditData({
+                        filters: {
+                          ...editData.filters,
+                          brightness: 5,
+                          contrast: 10,
+                          saturation: 5
+                        }
+                      });
+                    }}
+                  >
                     <Wand2 className="h-3 w-3 mr-2" />
                     Auto Color Correct
                   </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full justify-start"
+                    onClick={() => {
+                      // Add glow effect (increase brightness and slight blur)
+                      updateEditData({
+                        filters: {
+                          ...editData.filters,
+                          brightness: 20,
+                          blur: 1
+                        }
+                      });
+                    }}
+                  >
                     <Star className="h-3 w-3 mr-2" />
                     Add Glow Effect
                   </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full justify-start"
+                    onClick={() => {
+                      // Vintage look
+                      updateEditData({
+                        filters: {
+                          ...editData.filters,
+                          saturation: -30,
+                          contrast: 15,
+                          brightness: -5
+                        }
+                      });
+                    }}
+                  >
                     <Filter className="h-3 w-3 mr-2" />
                     Vintage Look
                   </Button>

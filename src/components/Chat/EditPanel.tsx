@@ -65,6 +65,7 @@ export function EditPanel({ videoId, editData, onSave, onCancel, onDataChange }:
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedLayer, setSelectedLayer] = useState<string | null>(null);
+  const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [zoom, setZoom] = useState(100);
   
   const updateEditData = (updates: Partial<VideoEditData>) => {
@@ -145,6 +146,9 @@ export function EditPanel({ videoId, editData, onSave, onCancel, onDataChange }:
                 onTimeChange={setCurrentTime}
                 onPlayPause={() => setIsPlaying(!isPlaying)}
                 editData={editData}
+                onEditDataChange={updateEditData}
+                onElementSelect={setSelectedElement}
+                selectedElement={selectedElement}
               />
             </div>
             
@@ -166,7 +170,7 @@ export function EditPanel({ videoId, editData, onSave, onCancel, onDataChange }:
           <div className="w-80 editor-panel">
             <PropertiesPanel 
               editData={editData}
-              selectedLayer={selectedLayer}
+              selectedLayer={selectedElement || selectedLayer}
               onDataChange={updateEditData}
             />
           </div>

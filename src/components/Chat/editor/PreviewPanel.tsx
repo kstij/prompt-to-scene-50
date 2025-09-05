@@ -16,6 +16,7 @@ import {
   Crosshair
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DraggableCanvas } from "./DraggableCanvas";
 import type { VideoEditData } from "../ChatInterface";
 
 interface PreviewPanelProps {
@@ -25,6 +26,9 @@ interface PreviewPanelProps {
   onTimeChange: (time: number) => void;
   onPlayPause: () => void;
   editData: VideoEditData;
+  onEditDataChange?: (data: Partial<VideoEditData>) => void;
+  onElementSelect?: (elementId: string | null) => void;
+  selectedElement?: string | null;
 }
 
 export function PreviewPanel({ 
@@ -32,8 +36,11 @@ export function PreviewPanel({
   currentTime, 
   isPlaying, 
   onTimeChange, 
-  onPlayPause,
-  editData 
+  onPlayPause, 
+  editData,
+  onEditDataChange,
+  onElementSelect,
+  selectedElement
 }: PreviewPanelProps) {
   const [volume, setVolume] = useState(100);
   const [previewZoom, setPreviewZoom] = useState(100);
@@ -134,8 +141,22 @@ export function PreviewPanel({
               </div>
             </div>
             
-            {/* Text overlay preview */}
-            {editData.text?.content && (
+            {/* Draggable Canvas Overlay */}
+            {onEditDataChange && onElementSelect && (
+              <div className="absolute inset-0">
+                <DraggableCanvas
+                  editData={editData}
+                  onDataChange={onEditDataChange}
+                  onElementSelect={onElementSelect}
+                  selectedElement={selectedElement || null}
+                  width={400 * (previewZoom / 100)}
+                  height={225 * (previewZoom / 100)}
+                />
+              </div>
+            )}
+            
+            {/* Text overlay preview - only show if not using draggable canvas */}
+            {(!onEditDataChange || !onElementSelect) && editData.text?.content && (
               <div 
                 className={cn(
                   "absolute left-4 right-4 text-white text-center font-bold text-lg drop-shadow-lg",

@@ -18,7 +18,15 @@ export interface Message {
 export interface VideoEditData {
   trim?: { start: number; end: number };
   crop?: string;
-  text?: { content: string; position: string };
+  text?: { 
+    content: string; 
+    position: string;
+    fontSize?: number;
+    fontFamily?: string;
+    color?: string;
+    x?: number;
+    y?: number;
+  };
   music?: string;
   filters?: Record<string, number>;
 }
