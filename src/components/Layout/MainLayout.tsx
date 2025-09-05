@@ -8,6 +8,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 
 export function MainLayout() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
 
   return (
     <SidebarProvider>
@@ -55,11 +56,17 @@ export function MainLayout() {
         {/* Main Content */}
         <div className="flex w-full pt-16 relative z-10">
           {sidebarVisible && (
-            <VideoSidebar />
+            <VideoSidebar 
+              onSelectVideo={setSelectedVideoId}
+              selectedVideoId={selectedVideoId}
+            />
           )}
           
           <main className="flex-1 min-h-screen">
-            <ChatInterface />
+            <ChatInterface 
+              selectedVideoId={selectedVideoId}
+              onClearSelection={() => setSelectedVideoId(null)}
+            />
           </main>
         </div>
       </div>

@@ -15,6 +15,11 @@ interface VideoHistoryItem {
   model: string;
 }
 
+interface VideoSidebarProps {
+  onSelectVideo: (videoId: string) => void;
+  selectedVideoId: string | null;
+}
+
 // Mock video history data
 const mockVideos: VideoHistoryItem[] = [
   {
@@ -43,9 +48,8 @@ const mockVideos: VideoHistoryItem[] = [
   }
 ];
 
-export function VideoSidebar() {
+export function VideoSidebar({ onSelectVideo, selectedVideoId }: VideoSidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   const filteredVideos = mockVideos.filter(video =>
     video.prompt.toLowerCase().includes(searchQuery.toLowerCase())
@@ -72,10 +76,10 @@ export function VideoSidebar() {
             {filteredVideos.map((video) => (
               <div
                 key={video.id}
-                onClick={() => setSelectedVideo(video.id)}
+                onClick={() => onSelectVideo(video.id)}
                 className={cn(
                   "group relative rounded-lg border border-border/50 p-3 cursor-pointer transition-all duration-200 hover:border-primary/50 hover:bg-secondary/50",
-                  selectedVideo === video.id && "border-primary bg-secondary"
+                  selectedVideoId === video.id && "border-primary bg-secondary"
                 )}
               >
                 {/* Video Thumbnail */}
