@@ -70,10 +70,6 @@ export function MainLayout() {
                   </SelectContent>
                 </Select>
               </div>
-              
-              <div className="text-sm text-muted-foreground animate-float">
-                Next-gen AI video creation ✨
-              </div>
             </div>
           </div>
         </header>
