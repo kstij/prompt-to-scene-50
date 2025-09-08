@@ -54,7 +54,7 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Describe the video you want to create..."
+              placeholder="Chat with Gemini about your video ideas..."
               className="min-h-[60px] max-h-32 resize-none border-0 bg-transparent text-foreground placeholder:text-muted-foreground focus-visible:ring-0 p-0"
               disabled={isGenerating}
             />
@@ -93,11 +93,11 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
       {/* Quick Suggestions */}
       <div className="flex flex-wrap gap-2">
         {[
-          "A frog dancing in the rain",
-          "Peaceful mountain lake at sunrise", 
-          "Abstract geometric shapes morphing",
-          "Add a cow to this scene",
-          "Make it more colorful and vibrant"
+          "Hey, make a video of frog dancing",
+          "What can you create for me?", 
+          "Add a cow to this scene too",
+          "Make it more cinematic",
+          "Can you help me with ideas?"
         ].map((suggestion) => (
           <Button
             key={suggestion}

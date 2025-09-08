@@ -97,7 +97,7 @@ export function ChatInterface({ selectedVideoId, onClearSelection, selectedModel
     {
       id: "welcome",
       type: "ai", 
-      content: "Welcome to AI Video Studio! 🎬 I'm your AI video creation assistant. Just describe what you want to see and I'll enhance your prompt with Gemini and generate amazing videos for you. You can also refine videos with follow-up requests!",
+      content: "Hey there! 👋 I'm Gemini, your AI video creation assistant. I'm here to chat about your video ideas and bring them to life! What kind of video are you thinking about creating today?",
       timestamp: new Date().toISOString()
     }
   ]);
@@ -128,77 +128,88 @@ export function ChatInterface({ selectedVideoId, onClearSelection, selectedModel
     // Add to conversation history
     setConversationHistory(prev => [...prev, content]);
 
-    // Step 1: Show enhancement phase
-    const enhancingMessageId = `enhancing-${Date.now()}`;
-    const enhancingMessage: Message = {
-      id: enhancingMessageId,
-      type: 'system',
-      content: "🧠 Gemini is enhancing your prompt...",
+    // Show Gemini thinking
+    const thinkingMessageId = `thinking-${Date.now()}`;
+    const thinkingMessage: Message = {
+      id: thinkingMessageId,
+      type: 'ai',
+      content: "🤔 Let me think about that...",
       isEnhancing: true,
       timestamp: new Date().toISOString()
     };
 
-    setMessages(prev => [...prev, enhancingMessage]);
+    setMessages(prev => [...prev, thinkingMessage]);
 
     try {
-      // Step 2: Get enhanced prompt from Gemini
-      const enhanced = await geminiService.enhancePrompt(content, conversationHistory);
+      // Get Gemini's conversational response
+      const geminiResponse = await geminiService.getChatResponse(content, conversationHistory);
       
-      // Update enhancing message to show enhanced prompt
+      // Update thinking message with Gemini's response
       setMessages(prev => prev.map(msg => 
-        msg.id === enhancingMessageId 
+        msg.id === thinkingMessageId 
           ? {
               ...msg,
-              content: `✨ Enhanced prompt: "${enhanced.enhancedPrompt}"`,
-              isEnhancing: false,
-              enhancedPrompt: enhanced.enhancedPrompt,
-              originalPrompt: enhanced.originalPrompt
+              content: geminiResponse.response,
+              isEnhancing: false
             }
           : msg
       ));
 
-      // Step 3: Start video generation
-      const generatingMessageId = `generating-${Date.now()}`;
-      const modelName = videoService.getModelDisplayName(selectedModel);
-      const generatingMessage: Message = {
-        id: generatingMessageId,
-        type: 'ai',
-        content: `🎬 Generating video with ${modelName}...`,
-        isGenerating: true,
-        model: modelName,
-        timestamp: new Date().toISOString()
-      };
+      // If Gemini decides to generate a video, do it
+      if (geminiResponse.shouldGenerateVideo) {
+        setTimeout(async () => {
+          const generatingMessageId = `generating-${Date.now()}`;
+          const modelName = videoService.getModelDisplayName(selectedModel);
+          const generatingMessage: Message = {
+            id: generatingMessageId,
+            type: 'ai',
+            content: `🎬 Perfect! Let me create that video for you using ${modelName}...`,
+            isGenerating: true,
+            model: modelName,
+            timestamp: new Date().toISOString()
+          };
 
-      setMessages(prev => [...prev, generatingMessage]);
+          setMessages(prev => [...prev, generatingMessage]);
 
-      // Step 4: Generate video
-      const videoResult = await videoService.generateVideo(enhanced, selectedModel);
-      
-      // Update generating message with final result
-      setMessages(prev => prev.map(msg => 
-        msg.id === generatingMessageId 
-          ? {
-              ...msg,
-              content: `✅ Your video is ready! Generated with ${modelName}`,
-              videoUrl: videoResult.videoUrl,
-              isGenerating: false
-            }
-          : msg
-      ));
+          try {
+            // Generate video with enhanced prompt
+            const videoResult = await videoService.generateVideo(geminiResponse.enhancedPrompt, selectedModel);
+            
+            setMessages(prev => prev.map(msg => 
+              msg.id === generatingMessageId 
+                ? {
+                    ...msg,
+                    content: `✅ Here's your video! I created: "${geminiResponse.enhancedPrompt.enhancedPrompt}"`,
+                    videoUrl: videoResult.videoUrl,
+                    isGenerating: false
+                  }
+                : msg
+            ));
+          } catch (error) {
+            setMessages(prev => prev.map(msg => 
+              msg.id === generatingMessageId 
+                ? {
+                    ...msg,
+                    content: "Sorry, there was an error generating your video. Please try again.",
+                    isGenerating: false
+                  }
+                : msg
+            ));
+          }
+        }, 1000);
+      }
 
     } catch (error) {
-      console.error('Error in video generation:', error);
-      setMessages(prev => prev.filter(msg => 
-        msg.id !== enhancingMessageId && msg.id !== `generating-${Date.now()}`
+      console.error('Error in chat response:', error);
+      setMessages(prev => prev.map(msg => 
+        msg.id === thinkingMessageId 
+          ? {
+              ...msg,
+              content: "Sorry, I'm having trouble processing that. Could you try rephrasing?",
+              isEnhancing: false
+            }
+          : msg
       ));
-      
-      const errorMessage: Message = {
-        id: `error-${Date.now()}`,
-        type: 'ai',
-        content: "Sorry, there was an error generating your video. Please try again.",
-        timestamp: new Date().toISOString()
-      };
-      setMessages(prev => [...prev, errorMessage]);
     }
   };
 

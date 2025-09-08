@@ -9,6 +9,12 @@ export interface EnhancedPrompt {
   };
 }
 
+export interface GeminiChatResponse {
+  response: string;
+  shouldGenerateVideo: boolean;
+  enhancedPrompt?: EnhancedPrompt;
+}
+
 export class GeminiService {
   private static instance: GeminiService;
   
@@ -17,6 +23,81 @@ export class GeminiService {
       GeminiService.instance = new GeminiService();
     }
     return GeminiService.instance;
+  }
+
+  async getChatResponse(
+    userMessage: string,
+    conversationHistory: string[] = []
+  ): Promise<GeminiChatResponse> {
+    const delay = Math.random() * 1000 + 500;
+    await new Promise(resolve => setTimeout(resolve, delay));
+
+    const lowerMessage = userMessage.toLowerCase();
+    const fullContext = conversationHistory.join(' ').toLowerCase();
+    
+    // Determine if this is a video generation request
+    const isVideoRequest = this.isVideoGenerationRequest(userMessage, conversationHistory);
+    
+    if (isVideoRequest) {
+      const enhancedPrompt = await this.enhancePrompt(userMessage, conversationHistory);
+      return {
+        response: `Great idea! I'll create a video with: "${enhancedPrompt.enhancedPrompt}". Let me generate that for you!`,
+        shouldGenerateVideo: true,
+        enhancedPrompt
+      };
+    } else {
+      // Conversational response
+      const response = this.generateConversationalResponse(userMessage, conversationHistory);
+      return {
+        response,
+        shouldGenerateVideo: false
+      };
+    }
+  }
+
+  private isVideoGenerationRequest(message: string, history: string[]): boolean {
+    const lowerMessage = message.toLowerCase();
+    const videoKeywords = [
+      'make', 'create', 'generate', 'video', 'show', 'animate', 'dancing', 'running',
+      'flying', 'swimming', 'jumping', 'walking', 'scene', 'movie', 'clip'
+    ];
+    
+    const hasVideoKeyword = videoKeywords.some(keyword => lowerMessage.includes(keyword));
+    const isModification = lowerMessage.includes('add') || lowerMessage.includes('change') || 
+                          lowerMessage.includes('modify') || lowerMessage.includes('include');
+    
+    // If it's a modification and we have previous context, it's likely a video request
+    if (isModification && history.length > 0) {
+      return true;
+    }
+    
+    return hasVideoKeyword;
+  }
+
+  private generateConversationalResponse(message: string, history: string[]): string {
+    const lowerMessage = message.toLowerCase();
+    
+    // Greetings
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+      return "Hello! I'm your AI video creation assistant. What kind of video would you like to create today? I can help you with anything from dancing animals to stunning landscapes!";
+    }
+    
+    // Questions about capabilities
+    if (lowerMessage.includes('what can you do') || lowerMessage.includes('help')) {
+      return "I can help you create amazing videos! Just tell me what you'd like to see - like 'a frog dancing in the rain' or 'peaceful mountains at sunrise'. I can also refine and modify videos based on your feedback. What sounds interesting to you?";
+    }
+    
+    // Clarifying questions
+    if (lowerMessage.includes('add') || lowerMessage.includes('include')) {
+      if (history.length === 0) {
+        return "I'd love to help you add something! But I need to know what video we're working with first. Could you describe the base video you'd like me to create?";
+      } else {
+        return "Interesting! I can definitely add that to our video concept. Should I go ahead and create the enhanced version now?";
+      }
+    }
+    
+    // Default encouraging response
+    return "That sounds creative! Would you like me to create a video based on that idea? I can make it really engaging with professional cinematic quality.";
   }
 
   async enhancePrompt(
