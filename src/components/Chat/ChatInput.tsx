@@ -6,7 +6,7 @@ import { Send, Paperclip, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
-  onSendMessage: (content: string, model: string) => void;
+  onSendMessage: (content: string) => void;
 }
 
 const AI_MODELS = [
@@ -18,7 +18,6 @@ const AI_MODELS = [
 
 export function ChatInput({ onSendMessage }: ChatInputProps) {
   const [input, setInput] = useState("");
-  const [selectedModel, setSelectedModel] = useState("runway-gen4");
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,13 +26,11 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
     if (!input.trim() || isGenerating) return;
 
     const content = input.trim();
-    const model = AI_MODELS.find(m => m.id === selectedModel)?.name || "Runway Gen-4 Turbo";
-    
     setInput("");
     setIsGenerating(true);
     
     try {
-      await onSendMessage(content, model);
+      await onSendMessage(content);
     } finally {
       setIsGenerating(false);
     }
@@ -48,29 +45,6 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      {/* Model Selection */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Sparkles className="h-4 w-4" />
-          <span>Model:</span>
-        </div>
-        
-        <Select value={selectedModel} onValueChange={setSelectedModel}>
-          <SelectTrigger className="w-64 h-9 bg-input border-border/50 focus:border-primary">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="bg-surface border-border/50">
-            {AI_MODELS.map((model) => (
-              <SelectItem key={model.id} value={model.id}>
-                <div>
-                  <div className="font-medium">{model.name}</div>
-                  <div className="text-xs text-muted-foreground">{model.description}</div>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
 
       {/* Input Area */}
       <div className="relative">
@@ -119,11 +93,11 @@ export function ChatInput({ onSendMessage }: ChatInputProps) {
       {/* Quick Suggestions */}
       <div className="flex flex-wrap gap-2">
         {[
-          "Cyberpunk city at night",
-          "Peaceful nature scene", 
-          "Abstract art animation",
-          "Futuristic robot",
-          "Ocean waves"
+          "A frog dancing in the rain",
+          "Peaceful mountain lake at sunrise", 
+          "Abstract geometric shapes morphing",
+          "Add a cow to this scene",
+          "Make it more colorful and vibrant"
         ].map((suggestion) => (
           <Button
             key={suggestion}

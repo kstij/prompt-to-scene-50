@@ -3,11 +3,20 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { VideoSidebar } from "./VideoSidebar";
 import { ChatInterface } from "../Chat/ChatInterface";
 import { Button } from "@/components/ui/button";
-import { PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PanelLeftClose, PanelLeftOpen, Sparkles, Bot } from "lucide-react";
+
+const AI_MODELS = [
+  { id: "runway-gen4", name: "Runway Gen-4 Turbo", description: "Latest high-quality model" },
+  { id: "veo3", name: "Veo3", description: "Fast and creative" },
+  { id: "banana", name: "Banana", description: "Artistic style" },
+  { id: "custom", name: "Custom API", description: "Your own model" }
+];
 
 export function MainLayout() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = useState("runway-gen4");
 
   return (
     <SidebarProvider>
@@ -38,6 +47,30 @@ export function MainLayout() {
             </div>
 
             <div className="flex items-center gap-4">
+              {/* Model Selection */}
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Bot className="h-4 w-4" />
+                  <span>Model:</span>
+                </div>
+                
+                <Select value={selectedModel} onValueChange={setSelectedModel}>
+                  <SelectTrigger className="w-48 h-9 bg-surface border-border/50 focus:border-primary">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-surface border-border/50">
+                    {AI_MODELS.map((model) => (
+                      <SelectItem key={model.id} value={model.id}>
+                        <div>
+                          <div className="font-medium text-sm">{model.name}</div>
+                          <div className="text-xs text-muted-foreground">{model.description}</div>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
               <div className="text-sm text-muted-foreground animate-float">
                 Next-gen AI video creation ✨
               </div>
@@ -58,6 +91,7 @@ export function MainLayout() {
             <ChatInterface 
               selectedVideoId={selectedVideoId}
               onClearSelection={() => setSelectedVideoId(null)}
+              selectedModel={selectedModel}
             />
           </main>
         </div>

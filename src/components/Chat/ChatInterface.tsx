@@ -1,18 +1,24 @@
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Edit3 } from "lucide-react";
+import { Edit3, Sparkles, Loader2 } from "lucide-react";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { EditPanel } from "./EditPanel";
+import { GeminiService } from "@/services/geminiService";
+import { VideoGenerationService } from "@/services/videoGenerationService";
 
 export interface Message {
   id: string;
-  type: 'user' | 'ai';
+  type: 'user' | 'ai' | 'system';
   content: string;
   videoUrl?: string;
   isGenerating?: boolean;
+  isEnhancing?: boolean;
+  enhancedPrompt?: string;
+  originalPrompt?: string;
   timestamp: string;
+  model?: string;
 }
 
 export interface VideoEditData {
@@ -34,6 +40,7 @@ export interface VideoEditData {
 interface ChatInterfaceProps {
   selectedVideoId: string | null;
   onClearSelection: () => void;
+  selectedModel: string;
 }
 
 // Mock chat data for videos
@@ -85,15 +92,19 @@ const videoChats: Record<string, Message[]> = {
   ]
 };
 
-export function ChatInterface({ selectedVideoId, onClearSelection }: ChatInterfaceProps) {
+export function ChatInterface({ selectedVideoId, onClearSelection, selectedModel }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
       type: "ai", 
-      content: "Welcome to AI Video Studio! I can help you create amazing videos. Just describe what you want to see and I'll generate it for you. You can also edit and enhance your videos with simple prompts.",
+      content: "Welcome to AI Video Studio! 🎬 I'm your AI video creation assistant. Just describe what you want to see and I'll enhance your prompt with Gemini and generate amazing videos for you. You can also refine videos with follow-up requests!",
       timestamp: new Date().toISOString()
     }
   ]);
+  
+  const [conversationHistory, setConversationHistory] = useState<string[]>([]);
+  const geminiService = GeminiService.getInstance();
+  const videoService = VideoGenerationService.getInstance();
   
   // Get messages for selected video or default messages
   const displayMessages = selectedVideoId 
@@ -103,7 +114,7 @@ export function ChatInterface({ selectedVideoId, onClearSelection }: ChatInterfa
   const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
   const [editData, setEditData] = useState<VideoEditData>({});
 
-  const handleSendMessage = async (content: string, model: string) => {
+  const handleSendMessage = async (content: string) => {
     const userMessage: Message = {
       id: `user-${Date.now()}`,
       type: 'user',
@@ -113,32 +124,82 @@ export function ChatInterface({ selectedVideoId, onClearSelection }: ChatInterfa
 
     // Add user message
     setMessages(prev => [...prev, userMessage]);
+    
+    // Add to conversation history
+    setConversationHistory(prev => [...prev, content]);
 
-    // Add AI response with loading state
-    const aiMessageId = `ai-${Date.now()}`;
-    const aiMessage: Message = {
-      id: aiMessageId,
-      type: 'ai',
-      content: `Generating your video with ${model}...`,
-      isGenerating: true,
+    // Step 1: Show enhancement phase
+    const enhancingMessageId = `enhancing-${Date.now()}`;
+    const enhancingMessage: Message = {
+      id: enhancingMessageId,
+      type: 'system',
+      content: "🧠 Gemini is enhancing your prompt...",
+      isEnhancing: true,
       timestamp: new Date().toISOString()
     };
 
-    setMessages(prev => [...prev, aiMessage]);
+    setMessages(prev => [...prev, enhancingMessage]);
 
-    // Simulate video generation
-    setTimeout(() => {
+    try {
+      // Step 2: Get enhanced prompt from Gemini
+      const enhanced = await geminiService.enhancePrompt(content, conversationHistory);
+      
+      // Update enhancing message to show enhanced prompt
       setMessages(prev => prev.map(msg => 
-        msg.id === aiMessageId 
+        msg.id === enhancingMessageId 
           ? {
               ...msg,
-              content: `I've created your video: "${content}"`,
-              videoUrl: "/api/placeholder/640/360", // Mock video
+              content: `✨ Enhanced prompt: "${enhanced.enhancedPrompt}"`,
+              isEnhancing: false,
+              enhancedPrompt: enhanced.enhancedPrompt,
+              originalPrompt: enhanced.originalPrompt
+            }
+          : msg
+      ));
+
+      // Step 3: Start video generation
+      const generatingMessageId = `generating-${Date.now()}`;
+      const modelName = videoService.getModelDisplayName(selectedModel);
+      const generatingMessage: Message = {
+        id: generatingMessageId,
+        type: 'ai',
+        content: `🎬 Generating video with ${modelName}...`,
+        isGenerating: true,
+        model: modelName,
+        timestamp: new Date().toISOString()
+      };
+
+      setMessages(prev => [...prev, generatingMessage]);
+
+      // Step 4: Generate video
+      const videoResult = await videoService.generateVideo(enhanced, selectedModel);
+      
+      // Update generating message with final result
+      setMessages(prev => prev.map(msg => 
+        msg.id === generatingMessageId 
+          ? {
+              ...msg,
+              content: `✅ Your video is ready! Generated with ${modelName}`,
+              videoUrl: videoResult.videoUrl,
               isGenerating: false
             }
           : msg
       ));
-    }, 3000);
+
+    } catch (error) {
+      console.error('Error in video generation:', error);
+      setMessages(prev => prev.filter(msg => 
+        msg.id !== enhancingMessageId && msg.id !== `generating-${Date.now()}`
+      ));
+      
+      const errorMessage: Message = {
+        id: `error-${Date.now()}`,
+        type: 'ai',
+        content: "Sorry, there was an error generating your video. Please try again.",
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    }
   };
 
   const handleEditVideo = (messageId: string) => {
