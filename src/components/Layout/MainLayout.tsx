@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { VideoSidebar } from "./VideoSidebar";
 import { ChatInterface } from "../Chat/ChatInterface";
+import { CustomApiDialog } from "../Chat/CustomApiDialog";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PanelLeftClose, PanelLeftOpen, Sparkles, Bot } from "lucide-react";
@@ -17,6 +18,21 @@ export function MainLayout() {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState("runway-gen4");
+  const [showCustomApiDialog, setShowCustomApiDialog] = useState(false);
+  const [customApiConfig, setCustomApiConfig] = useState<any>(null);
+
+  const handleModelChange = (value: string) => {
+    if (value === "custom") {
+      setShowCustomApiDialog(true);
+    } else {
+      setSelectedModel(value);
+    }
+  };
+
+  const handleCustomApiSave = (config: any) => {
+    setCustomApiConfig(config);
+    setSelectedModel("custom");
+  };
 
   return (
     <SidebarProvider>
@@ -54,7 +70,7 @@ export function MainLayout() {
                   <span>Model:</span>
                 </div>
                 
-                <Select value={selectedModel} onValueChange={setSelectedModel}>
+                <Select value={selectedModel} onValueChange={handleModelChange}>
                   <SelectTrigger className="w-48 h-9 bg-surface border-border/50 focus:border-primary">
                     <SelectValue />
                   </SelectTrigger>
@@ -91,6 +107,13 @@ export function MainLayout() {
             />
           </main>
         </div>
+
+        <CustomApiDialog
+          open={showCustomApiDialog}
+          onOpenChange={setShowCustomApiDialog}
+          onSave={handleCustomApiSave}
+          initialConfig={customApiConfig}
+        />
       </div>
     </SidebarProvider>
   );
